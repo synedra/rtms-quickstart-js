@@ -32,18 +32,16 @@ rtms.onWebhookEvent(({ event, payload }) => {
   const client = new rtms.Client();
   clients.set(streamId, client);
 
-  // Configure high-quality audio (16kHz stereo OPUS)
-  client.setAudioParams({
-    contentType: rtms.AudioContentType.RAW_AUDIO,
-    codec: rtms.AudioCodec.OPUS,
-    sampleRate: rtms.AudioSampleRate.SR_16K,
-    channel: rtms.AudioChannel.STEREO,
-    dataOpt: rtms.AudioDataOption.AUDIO_MIXED_STREAM,
-    duration: 20,     // 20ms frame duration
-    frameSize: 640    // 16kHz * 2 channels * 20ms / 1000 = 640 samples
+  client.onTranscriptData((data, size, timestamp, metadata) => {
+    console.log(`[${timestamp}] -- ${metadata.userName}: ${data}`);
   });
-  
-  const video_opts =  {
+
+  client.onAudioData((data, size, timestamp, metadata) => {
+      console.log(`Received ${size} bytes of audio data at ${timestamp} from ${metadata.userName}`);
+  });
+
+  // Configure HD video (720p H.264 at 30fps)
+  const video_params =  {
     contentType: rtms.VideoContentType.RAW_VIDEO,
     codec: rtms.VideoCodec.H264,
     resolution: rtms.VideoResolution.SD,
@@ -51,16 +49,16 @@ rtms.onWebhookEvent(({ event, payload }) => {
     fps: 30
   }
 
-  // Configure HD video (720p H.264 at 30fps)
-  client.setVideoParams(video_opts);
-  client.setDeskshareParams(video_opts)
+  client.setVideoParams(video_params);
 
-  client.onTranscriptData((data, size, timestamp, metadata) => {
-    console.log(`[${timestamp}] -- ${metadata.userName}: ${data}`);
+  client.onVideoData((data, size, timestamp, metadata) => {
+    console.log(`Received ${size} bytes of video data at ${timestamp} from ${metadata.userName}`);
   });
 
+  client.setDeskshareParams(video_params)
+
   client.onDeskshareData((data, size, timestamp, metadata) => {
-    console.log(`DESKSHARE [${timestamp}]: ${size} bytes from ${metadata.userName}`);
+    console.log(`Received ${size} bytes of deskshare data at ${timestamp} from ${metadata.userName}`);
   });
 
   // Join the meeting using the webhook payload directly
