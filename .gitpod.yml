@@ -1,7 +1,8 @@
 image: gitpod/workspace-full
 tasks:
   - init: npm install
-    command: echo "Please Define .env file if not exist"
+    command: echo "ZM_RTS_CLIENT=$ZOOM_RTS_CLIENT"
+             echo "ZM_RTS_SECRET=$ZOOM_RTS_SECRET"
 ports:
-  - port: 3000
+  - port: 8080
     onOpen: open-browser
