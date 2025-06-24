@@ -5,6 +5,8 @@ This simple app demonstrates integration with the [Zoom Realtime Media Streams S
 [![npm](https://img.shields.io/npm/v/@zoom/rtms)](https://www.npmjs.com/package/@zoom/rtms)
 [![docs](https://img.shields.io/badge/docs-online-blue)](https://zoom.github.io/rtms/js/)
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
+
 ## 📋 Setup
 
 The SDK is already included in package dependencies. Install other dependencies:
